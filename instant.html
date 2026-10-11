@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instant Share - Memories of NUHA</title>
+    <style>
+        /* CSS Styling matching the main page */
+        :root {
+            --primary-color: #ff6b81;
+            --secondary-color: #ff85a2;
+            --bg-color: #fff0f3;
+            --text-color: #2f3542;
+            --card-bg: #ffffff;
+            --card-desc: #666;
+            --header-bg: linear-gradient(135deg, #ff758c, #ff7eb3);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #ff4757;
+            --secondary-color: #ff6b81;
+            --bg-color: #1e1e2f;
+            --text-color: #f1f2f6;
+            --card-bg: #2d2d44;
+            --card-desc: #a4b0be;
+            --header-bg: linear-gradient(135deg, #2f3542, #57606f);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* Floating Hearts Animation Background */
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 107, 129, 0.15);
+            font-size: 1.5rem;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--text-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Message Card */
+        .message-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border: 2px dashed var(--primary-color);
+            animation: popUp 0.4s ease-out;
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .message-card h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .message-card p {
+            font-size: 1.05rem;
+            color: var(--card-desc);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* OK Button */
+        .ok-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .ok-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 129, 0.6);
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Floating Background Hearts -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 dark mode</button>
+
+    <!-- Main Message Box -->
+    <div class="message-card">
+        <h2>Notice ✨</h2>
+        <p>Currently, there is nothing available to share right now. Please check back later!</p>
+        <a href="index.html" class="ok-btn">OK</a>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Floating Hearts Generator
+        const heartsContainer = document.getElementById('heartsBg');
+        const heartSymbols = ['❤️', '💖', '✨', '💕', '🌸'];
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            heart.style.animationDelay = (Math.random() * 5) + 's';
+            heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+            heartsContainer.appendChild(heart);
+        }
+
+        // Dark/Light Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
+        }
+    </script>
+</body>
+</html>
