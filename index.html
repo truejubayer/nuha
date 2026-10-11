@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>project nuha ✨</title>
     <style>
-        /* CSS Styling with Dark Mode & New Features */
+        /* CSS Styling */
         :root {
             --primary-color: #ff6b81;
             --secondary-color: #ff85a2;
@@ -14,16 +14,6 @@
             --card-bg: #ffffff;
             --card-desc: #666;
             --header-bg: linear-gradient(135deg, #ff758c, #ff7eb3);
-        }
-
-        [data-theme="dark"] {
-            --primary-color: #ff4757;
-            --secondary-color: #ff6b81;
-            --bg-color: #1e1e2f;
-            --text-color: #f1f2f6;
-            --card-bg: #2d2d44;
-            --card-desc: #a4b0be;
-            --header-bg: linear-gradient(135deg, #2f3542, #57606f);
         }
 
         * {
@@ -79,7 +69,7 @@
             justify-content: flex-end;
         }
 
-        .theme-toggle, .about-btn-header, .instant-share-btn {
+        .about-btn-header, .instant-share-btn {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
             color: white;
@@ -95,7 +85,7 @@
             align-items: center;
         }
 
-        .theme-toggle:hover, .about-btn-header:hover, .instant-share-btn:hover {
+        .about-btn-header:hover, .instant-share-btn:hover {
             background: rgba(255, 255, 255, 0.4);
             transform: translateY(-2px);
         }
@@ -413,7 +403,7 @@
         }
     </style>
 </head>
-<body data-theme="light">
+<body>
 
     <!-- Floating Background Hearts -->
     <div class="hearts-bg" id="heartsBg"></div>
@@ -423,9 +413,8 @@
         <div class="header-actions">
              <a href="instant.html" class="instant-share-btn">⚡ instant share</a>
             <button class="about-btn-header" onclick="openAboutModal()">ℹ️ About</button>
-            <button class="theme-toggle" onclick="toggleTheme()">🌓 dark mode</button>
         </div>
-        <h1>Memories of NUHA✨</h1>
+        <h1>project nuha ✨</h1>
         <p><a href="https://jubayer0011.github.io/aboutme/">Made by JUBAYER</a></p>
     </header>
 
@@ -438,7 +427,7 @@
     <div class="controls-container">
         <input type="text" class="search-box" id="searchBox" placeholder="search here..." onkeyup="searchMemories()">
         <div class="nav-buttons">
-            <button class="btn active" onclick="filterMedia('all')">সবগুলো (All)</button>
+            <button class="btn active" onclick="filterMedia('all')">Random (All)</button>
             <button class="btn" onclick="filterMedia('photo')">ছবি (Photos)</button>
             <button class="btn" onclick="filterMedia('video')">ভিডিও (Videos)</button>
             <button class="btn" onclick="filterMedia('audio')">অডিও (Audio)</button>
@@ -448,7 +437,7 @@
     <!-- Media Gallery Container -->
     <div class="container">
         <div class="media-grid" id="mediaGrid">
-            <!-- Dynamic Photos, Videos & Audios will be loaded here -->
+            <!-- Dynamic Random Content will be loaded here -->
         </div>
     </div>
 
@@ -488,12 +477,73 @@
             heartsContainer.appendChild(heart);
         }
 
+        // Expanded Pool of 50+ Beautiful Quotes
+        const quotesPool = [
+            "“Memories warm you up from the inside out.” — Haruki Murakami",
+            "“Good friends are like stars. You don't always see them, but you know they're always there.”",
+            "“Life is not measured by the number of breaths we take, but by the moments that take our breath away.”",
+            "“Friendship is born at that moment when one person says to another, 'What! You too? I thought I was the only one.'” — C.S. Lewis",
+            "“Behind every sweet memory, there is a story of laughter and joy.”",
+            "“The best things in life are the people we love, the places we've been, and the memories we've made along the way.”",
+            "“Keep the memories close to your heart, because they never fade away.”",
+            "“Life is a journey, and beautiful moments make it worth traveling.”",
+            "“A true friend is someone who knows all about you and still loves you.” — Elbert Hubbard",
+            "“Some moments are gold, wrapped in the quiet beauty of everyday life.”",
+            "“Memory is a way of holding onto the things you love, the things you are, the things you never want to lose.”",
+            "“A single moment can spark a memory that lasts a lifetime.”",
+            "“True friendship multiplies the good in life and divides its evils.” — Baltasar Gracian",
+            "“Collect moments, not things.”",
+            "“Happiness is holding onto small, beautiful memories.”",
+            "“In the garden of memory, in the palace of dreams, that is where we will meet.” — Lewis Carroll",
+            "“Friends are the family we choose for ourselves.”",
+            "“No distance of place or lapse of time can lessen the friendship of those who are thoroughly persuaded of each other's worth.” — Robert Southey",
+            "“Life is short, but memories are everlasting.”",
+            "“There is nothing on this earth more to be prized than true friendship.” — Thomas Aquinas",
+            "“Yesterday is history, tomorrow is a mystery, today is a gift of God, which is why we call it the present.” — Bill Keane",
+            "“We do not remember days, we remember moments.” — Cesare Pavese",
+            "“Sometimes you will never know the value of a moment until it becomes a memory.” — Dr. Seuss",
+            "“A friend is one who walks in when the rest of the world walks out.” — Walter Winchell",
+            "“Memories are timeless treasures of the heart.”",
+            "“Laughter is timeless, imagination has no age, and dreams are forever.” — Walt Disney",
+            "“Friendship is the golden thread that ties the heart of all the world.” — John Evelyn",
+            "“Life was meant for good friends and great adventures.”",
+            "“The most beautiful things in the world cannot be seen or even touched—they must be felt with the heart.” — Helen Keller",
+            "“Smiles are the sunshine of memories.”",
+            "“To the world you may be one person, but to one person you may be the world.” — Dr. Seuss",
+            "“Life is made of small moments like this.”",
+            "“Good times become good memories and bad times become good lessons.”",
+            "“Side by side or miles apart, real friends are always close to the heart.”",
+            "“A sweet memory is like a gentle breeze on a warm summer evening.”",
+            "“Nothing makes the earth seem so spacious as to have friends at a distance; they make the latitudes and longitudes.” — Henry David Thoreau",
+            "“Never underestimate the power of a quiet moment spent with a good friend.”",
+            "“The magic of life lies in its unpredictable beauty.”",
+            "“Memories are the architecture of our souls.”",
+            "“Walking with a friend in the dark is better than walking alone in the light.” — Helen Keller",
+            "“Every picture tells a story of a moment worth remembering.”",
+            "“Friendship is the comfort of knowing that even when you feel alone, you aren't.”",
+            "“Count your age by friends, not years. Count your life by smiles, not tears.” — John Lennon",
+            "“The best portion of a good life is little, nameless, unremembered acts of kindness and love.” — William Wordsworth",
+            "“Sweet memories are the gentle music of our lives.”",
+            "“A journey is best measured in friends, rather than miles.” — Tim Cahill",
+            "“Life is a collection of chapters, each filled with precious memories.”",
+            "“True friends are never apart, maybe in distance, but never in heart.”",
+            "“Cherish every moment, for tomorrow it becomes a memory.”",
+            "“Friendship isn't a big thing—it's a million little things.”",
+            "“Memories are the threads that weave the fabric of our lives.”",
+            "“Always remember that you are braver than you believe, stronger than you seem, and smarter than you think.” — A.A. Milne"
+        ];
+
+        function getRandomQuote() {
+            return quotesPool[Math.floor(Math.random() * quotesPool.length)];
+        }
+
         // ==========================================
         // CUSTOM TITLES CONFIGURATION
         // ==========================================
         const customPhotoTitles = {
             0: { title: "visiting somewhere 🌸", desc: "sample photo" },
-            1: { title: "good moment ☕", desc: "adorable pose!" }
+            1: { title: "good moment ☕", desc: "adorable pose!" },
+            198: { title: "last exam HSC", desc: "amadr practical xm er last day chilo. The end of HSC"}
         };
 
         const customVideoTitles = {
@@ -504,7 +554,8 @@
             0: { title: "kara savda core music 🎙️", desc: "usable as ringtone" }
         };
 
-        const mediaGrid = document.getElementById('mediaGrid');
+        // Collect all cards into an array to randomize
+        let allCardsArray = [];
 
         // 1. Generate 200 Photos (photos/ folder)
         for (let i = 0; i < 200; i++) {
@@ -512,7 +563,7 @@
             let filePath = `photos/${fileName}`;
             
             let titleText = customPhotoTitles[i] ? customPhotoTitles[i].title : `Photo (${i + 1})`;
-            let descText = customPhotoTitles[i] ? customPhotoTitles[i].desc : "সুন্দর মুহূর্তের স্থিরচিত্র।";
+            let descText = customPhotoTitles[i] ? customPhotoTitles[i].desc : getRandomQuote();
 
             let card = document.createElement('div');
             card.className = 'card item-photo';
@@ -526,7 +577,7 @@
                     <button onclick="downloadFile('${filePath}', '${fileName}')" class="download-btn">⬇️ Download Photo</button>
                 </div>
             `;
-            mediaGrid.appendChild(card);
+            allCardsArray.push(card);
         }
 
         // 2. Generate 3 Videos Dynamically (videos/ folder)
@@ -536,7 +587,7 @@
             let videoFilePath = `videos/${videoFileName}`;
 
             let vTitle = customVideoTitles[vIndex] ? customVideoTitles[vIndex].title : `Video (${j})`;
-            let vDesc = customVideoTitles[vIndex] ? customVideoTitles[vIndex].desc : "ভিডিও ক্লিপ মুহূর্ত।";
+            let vDesc = customVideoTitles[vIndex] ? customVideoTitles[vIndex].desc : getRandomQuote();
 
             let videoCard = document.createElement('div');
             videoCard.className = 'card item-video';
@@ -552,10 +603,10 @@
                     <button onclick="downloadFile('${videoFilePath}', '${videoFileName}')" class="download-btn">⬇️ Download Video</button>
                 </div>
             `;
-            mediaGrid.appendChild(videoCard);
+            allCardsArray.push(videoCard);
         }
 
-        // 3. Generate Audios Dynamically & Keep Them At The END (audios/ folder)
+        // 3. Generate Audios Dynamically (audios/ folder)
         let audioCount = 1; 
         for (let k = 1; k <= audioCount; k++) {
             let aIndex = k - 1;
@@ -563,7 +614,7 @@
             let audioFilePath = `audios/${audioFileName}`;
 
             let aTitle = customAudioTitles[aIndex] ? customAudioTitles[aIndex].title : `Audio (${k})`;
-            let aDesc = customAudioTitles[aIndex] ? customAudioTitles[aIndex].desc : "অডিও ফাইল।";
+            let aDesc = customAudioTitles[aIndex] ? customAudioTitles[aIndex].desc : getRandomQuote();
 
             let audioCard = document.createElement('div');
             audioCard.className = 'card item-audio audio-card';
@@ -577,8 +628,22 @@
                 </audio>
                 <button onclick="downloadFile('${audioFilePath}', '${audioFileName}')" class="download-btn" style="margin-top:10px;">⬇️ Download Audio</button>
             `;
-            mediaGrid.appendChild(audioCard);
+            allCardsArray.push(audioCard);
         }
+
+        // Shuffle / Randomize array function (Fisher-Yates Shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Append shuffled cards into mediaGrid on page load
+        const mediaGrid = document.getElementById('mediaGrid');
+        let shuffledCards = shuffleArray(allCardsArray);
+        shuffledCards.forEach(card => mediaGrid.appendChild(card));
 
         // Download Function
         function downloadFile(fileUrl, fileName) {
@@ -602,16 +667,6 @@
                     a.target = '_blank';
                     a.click();
                 });
-        }
-
-        // Dark/Light Theme Toggle
-        function toggleTheme() {
-            const body = document.body;
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-            }
         }
 
         // About Modal Functions
