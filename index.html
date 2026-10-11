@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memories with Nuha ✨</title>
+    <style>
+        /* CSS Styling with Dark Mode & New Features */
+        :root {
+            --primary-color: #ff6b81;
+            --secondary-color: #ff85a2;
+            --bg-color: #fff0f3;
+            --text-color: #2f3542;
+            --card-bg: #ffffff;
+            --card-desc: #666;
+            --header-bg: linear-gradient(135deg, #ff758c, #ff7eb3);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #ff4757;
+            --secondary-color: #ff6b81;
+            --bg-color: #1e1e2f;
+            --text-color: #f1f2f6;
+            --card-bg: #2d2d44;
+            --card-desc: #a4b0be;
+            --header-bg: linear-gradient(135deg, #2f3542, #57606f);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 50px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating Hearts Animation Background */
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 107, 129, 0.15);
+            font-size: 1.5rem;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.8); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: var(--header-bg);
+            color: white;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 4px 20px rgba(255, 107, 129, 0.2);
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Special Banner */
+        .special-banner {
+            max-width: 600px;
+            margin: -25px auto 20px;
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px dashed var(--primary-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Search & Filter Section */
+        .controls-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover, .btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 107, 129, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Grid Layout for Media Cards */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: zoomIn 0.5s ease;
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .card img, .card video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+
+        .card img:hover {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--card-desc);
+            line-height: 1.4;
+        }
+
+        /* Download Button Styling */
+        .download-btn {
+            display: inline-block;
+            text-align: center;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Audio Specific Card */
+        .audio-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 22px;
+        }
+
+        .audio-card audio {
+            width: 100%;
+            margin-top: 12px;
+            border-radius: 20px;
+        }
+
+        /* Lightbox Popup for Photos */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(255,255,255,0.2);
+        }
+
+        .lightbox .close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--card-desc);
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Floating Background Hearts -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Header -->
+    <header>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 dark mode</button>
+        <h1>Our Treasures & Memories ✨</h1>
+        <p>PROJECT NUHA</p>
+    </header>
+
+    <!-- Special Banner -->
+    <div class="special-banner">
+        Best wishes ! 🌸
+    </div>
+
+    <!-- Search & Filter Section -->
+    <div class="controls-container">
+        <input type="text" class="search-box" id="searchBox" placeholder="search here..." onkeyup="searchMemories()">
+        <div class="nav-buttons">
+            <button class="btn active" onclick="filterMedia('all')">সবগুলো (All)</button>
+            <button class="btn" onclick="filterMedia('photo')">ছবি (Photos)</button>
+            <button class="btn" onclick="filterMedia('video')">ভিডিও (Videos)</button>
+            <button class="btn" onclick="filterMedia('audio')">অডিও (Audio)</button>
+        </div>
+    </div>
+
+    <!-- Media Gallery Container -->
+    <div class="container">
+        <div class="media-grid" id="mediaGrid">
+
+            <!-- Dynamic Photos & Videos will be loaded here -->
+
+            <!-- Sample Audio Card -->
+            <div class="card item-audio audio-card" data-title="voice message for you বিশেষ ভয়েস মেসেজ">
+                <div class="card-title">voice message for you 🎙️</div>
+                <div class="card-desc">নুহার উদ্দেশ্যে রেকর্ড করা মেসেজ।</div>
+                <audio controls>
+                    <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+                    Your browser does not support audio.
+                </audio>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Lightbox for Photo View -->
+    <div class="lightbox" id="lightbox">
+        <span class="close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Enlarged View">
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made for Nuha by JUBAYER TALUKDAR</p>
+    </footer>
+
+    <!-- JavaScript Code -->
+    <script>
+        // Floating Hearts Generator
+        const heartsContainer = document.getElementById('heartsBg');
+        const heartSymbols = ['❤️', '💖', '✨', '💕', '🌸'];
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            heart.style.animationDelay = (Math.random() * 5) + 's';
+            heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+            heartsContainer.appendChild(heart);
+        }
+
+        // ==========================================
+        // MANUALLY CUSTOMIZE TITLES FOR PHOTOS & VIDEOS HERE
+        // Format: index number: { title: "তোমার পছন্দমতো টাইটেল", desc: "ডেসক্রিপশন" }
+        // ==========================================
+        const customPhotoTitles = {
+            0: { title: "প্রথম ঘুরাঘুরির দিন 🌸", desc: "সেদিনের স্মৃতিটা সবসময় স্পেশাল হয়ে থাকবে।" },
+            1: { title: "সুন্দর একটা বিকেল ☕", desc: "চা খাওয়ার আড্ডা আর মিষ্টি রোদ।" }
+            // যেগুলোর নাম এখানে দিবে না, সেগুলোতে অটোমেটিক Photo #2, Photo #3 এভাবে নাম বসে যাবে।
+        };
+
+        const customVideoTitles = {
+            0: { title: "মজার ভিডিও ক্লিপ 🎥", desc: "হঠাৎ রেকর্ড করা হাসির একটি মুহূর্ত!" }
+        };
+
+        const mediaGrid = document.getElementById('mediaGrid');
+
+        // 1. Generate 200 Photos Dynamically (photos/ folder থেকে)
+        for (let i = 0; i < 200; i++) {
+            let fileName = i === 0 ? 'photo.jpg' : `photo (${i}).jpg`;
+            let filePath = `photos/${fileName}`;
+            
+            // Custom title check or default fallback
+            let titleText = customPhotoTitles[i] ? customPhotoTitles[i].title : `Photo (${i + 1})`;
+            let descText = customPhotoTitles[i] ? customPhotoTitles[i].desc : "সুন্দর মুহূর্তের স্থিরচিত্র।";
+
+            let card = document.createElement('div');
+            card.className = 'card item-photo';
+            card.setAttribute('data-title', (titleText + " " + descText).toLowerCase());
+
+            card.innerHTML = `
+                <img src="${filePath}" alt="Memory Photo" onclick="openLightbox('${filePath}')" onerror="this.src='https://picsum.photos/400/300?random=${i}'">
+                <div class="card-content">
+                    <div class="card-title">${titleText}</div>
+                    <div class="card-desc">${descText}</div>
+                    <button onclick="downloadFile('${filePath}', '${fileName}')" class="download-btn">⬇️ Download Photo</button>
+                </div>
+            `;
+            
+            mediaGrid.appendChild(card);
+        }
+
+        // 2. Generate Sample Videos (যদি ভিডিও ফোল্ডার থেকে দেখাতে চাও, এখানে বাড়িয়ে নিতে পারো)
+        // বর্তমানে ১টি স্যাম্পল ভিডিও দেওয়া আছে, চাইলে লুপ বা বাড়িয়ে নিতে পারো।
+        let videoFilePath = "https://www.w3schools.com/html/mov_bbb.mp4";
+        let videoFileName = "video (1).mp4";
+        let vTitle = customVideoTitles[0] ? customVideoTitles[0].title : "Video (1)";
+        let vDesc = customVideoTitles[0] ? customVideoTitles[0].desc : "ভিডিও ক্লিপ মুহূর্ত।";
+
+        let videoCard = document.createElement('div');
+        videoCard.className = 'card item-video';
+        videoCard.setAttribute('data-title', (vTitle + " " + vDesc).toLowerCase());
+        videoCard.innerHTML = `
+            <video controls>
+                <source src="${videoFilePath}" type="video/mp4">
+                Your browser does not support video.
+            </video>
+            <div class="card-content">
+                <div class="card-title">${vTitle}</div>
+                <div class="card-desc">${vDesc}</div>
+                <button onclick="downloadFile('${videoFilePath}', '${videoFileName}')" class="download-btn">⬇️ Download Video</button>
+            </div>
+        `;
+        mediaGrid.appendChild(videoCard);
+
+
+        // Proper Direct Download Function for Local/Remote Files
+        function downloadFile(fileUrl, fileName) {
+            fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = blobUrl;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(blobUrl);
+                    document.body.removeChild(a);
+                })
+                .catch(() => {
+                    // Fallback if fetch fails (e.g. CORS)
+                    const a = document.createElement('a');
+                    a.href = fileUrl;
+                    a.download = fileName;
+                    a.target = '_blank';
+                    a.click();
+                });
+        }
+
+        // Dark/Light Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // Filter functionality
+        let currentFilter = 'all';
+        function filterMedia(type) {
+            currentFilter = type;
+            const buttons = document.querySelectorAll('.nav-buttons .btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            applyFilters();
+        }
+
+        // Search functionality
+        function searchMemories() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchBox').value.toLowerCase();
+            const cards = document.querySelectorAll('.media-grid .card');
+
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const isPhoto = card.classList.contains('item-photo');
+                const isVideo = card.classList.contains('item-video');
+                const isAudio = card.classList.contains('item-audio');
+
+                let matchesType = true;
+                if (currentFilter === 'photo' && !isPhoto) matchesType = false;
+                if (currentFilter === 'video' && !isVideo) matchesType = false;
+                if (currentFilter === 'audio' && !isAudio) matchesType = false;
+
+                let matchesSearch = title.includes(searchQuery);
+
+                if (matchesType && matchesSearch) {
+                    card.style.display = card.classList.contains('item-audio') ? 'flex' : 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Lightbox Functions for Photos
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
