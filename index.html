@@ -67,19 +67,32 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* Theme Toggle Button */
-        .theme-toggle {
+        /* Top Header Action Buttons Container */
+        .header-actions {
             position: absolute;
             top: 20px;
             right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .theme-toggle, .about-btn-header {
             background: rgba(255, 255, 255, 0.2);
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.4);
             color: white;
             padding: 8px 15px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.9rem;
             backdrop-filter: blur(5px);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover, .about-btn-header:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
         }
 
         /* Header Section */
@@ -321,6 +334,71 @@
             cursor: pointer;
         }
 
+        /* About Popup Modal Styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            animation: popUp 0.3s ease-out;
+            border: 2px solid var(--primary-color);
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        .modal-box p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--card-desc);
+        }
+
+        .modal-box .close-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .modal-box .close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 129, 0.4);
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -337,7 +415,10 @@
 
     <!-- Header -->
     <header>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓 dark mode</button>
+        <div class="header-actions">
+            <button class="about-btn-header" onclick="openAboutModal()">ℹ️ About</button>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓 dark mode</button>
+        </div>
         <h1>Memories of NUHA✨</h1>
         <p><a href="https://jubayer0011.github.io/aboutme/">Made by JUBAYER</a></p>
     </header>
@@ -371,9 +452,19 @@
         <img id="lightbox-img" src="" alt="Enlarged View">
     </div>
 
+    <!-- About Modal Popup -->
+    <div class="modal-overlay" id="aboutModal" onclick="closeAboutModalOutside(event)">
+        <div class="modal-box">
+            <h2>About This Website ✨</h2>
+            <p>This personal website has been created by <strong>Jubayer Talukdar</strong> for his friend <strong>Nuha</strong> as a dedicated space for shared memories.</p>
+            <p>Please note that this is a private personal website created with explicit permission. There are no malicious intents behind developing this platform, and the developer holds no liability or responsibility for any unintended damages or issues.</p>
+            <button class="close-btn" onclick="closeAboutModal()">Close</button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
-        <p>Made by JUBAYER TALUKDAR - version 1.0 - first relased 11/10/2026 - last updated 11/10/2026</p>
+        <p>Made by JUBAYER TALUKDAR - version 1.0 - relased 11/102026</p>
     </footer>
 
     <!-- JavaScript Code -->
@@ -401,13 +492,10 @@
 
         const customVideoTitles = {
             0: { title: "মজার ভিডিও ক্লিপ 🎥", desc: "sample video!" }
-            // 1: { title: "দ্বিতীয় ভিডিওর নাম", desc: "ডেসক্রিপশন" },
-            // 2: { title: "তৃতীয় ভিডিওর নাম", desc: "ডেসক্রিপশন" }
         };
 
         const customAudioTitles = {
-            0: { title: "kara savda core music 🎙️", desc: "for rington" }
-            // 1: { title: "অন্য অডিওর নাম", desc: "ডেসক্রিপশন" }
+            0: { title: "voice message 🎙️", desc: "audio file" }
         };
 
         const mediaGrid = document.getElementById('mediaGrid');
@@ -437,7 +525,7 @@
 
         // 2. Generate 3 Videos Dynamically (videos/ folder)
         for (let j = 1; j <= 3; j++) {
-            let vIndex = j - 1; // 0, 1, 2 for custom titles index
+            let vIndex = j - 1;
             let videoFileName = `video (${j}).mp4`;
             let videoFilePath = `videos/${videoFileName}`;
 
@@ -462,7 +550,6 @@
         }
 
         // 3. Generate Audios Dynamically & Keep Them At The END (audios/ folder)
-        // বর্তমানে ১টি অডিও (audio (1).mp3) দেওয়া আছে, ভবিষ্যতে বাড়াতে চাইলে লুপের সংখ্যা (1) বাড়িয়ে দিতে পারো।
         let audioCount = 1; 
         for (let k = 1; k <= audioCount; k++) {
             let aIndex = k - 1;
@@ -487,8 +574,7 @@
             mediaGrid.appendChild(audioCard);
         }
 
-
-        // Proper Direct Download Function for Local/Remote Files
+        // Download Function
         function downloadFile(fileUrl, fileName) {
             fetch(fileUrl)
                 .then(response => response.blob())
@@ -519,6 +605,21 @@
                 body.setAttribute('data-theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // About Modal Functions
+        function openAboutModal() {
+            document.getElementById('aboutModal').style.display = 'flex';
+        }
+
+        function closeAboutModal() {
+            document.getElementById('aboutModal').style.display = 'none';
+        }
+
+        function closeAboutModalOutside(event) {
+            if (event.target.id === 'aboutModal') {
+                closeAboutModal();
             }
         }
 
