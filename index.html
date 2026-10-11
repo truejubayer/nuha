@@ -219,6 +219,7 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.06);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             animation: zoomIn 0.5s ease;
+            min-height: 320px; /* Layout Shift প্রতিরোধ করতে */
         }
 
         @keyframes zoomIn {
@@ -238,6 +239,7 @@
             display: block;
             cursor: pointer;
             transition: transform 0.5s ease;
+            background-color: #f0f0f0;
         }
 
         .card img:hover {
@@ -437,7 +439,7 @@
     <!-- Media Gallery Container -->
     <div class="container">
         <div class="media-grid" id="mediaGrid">
-            <!-- Dynamic Random Content will be loaded here -->
+            <!-- Dynamic Lazy-Loaded Random Content will be inserted here -->
         </div>
     </div>
 
@@ -557,7 +559,7 @@
         // Collect all cards into an array to randomize
         let allCardsArray = [];
 
-        // 1. Generate 200 Photos (photos/ folder)
+        // 1. Generate 200 Photos (photos/ folder) with Lazy Loading
         for (let i = 0; i < 200; i++) {
             let fileName = i === 0 ? 'photo.jpg' : `photo (${i}).jpg`;
             let filePath = `photos/${fileName}`;
@@ -569,8 +571,9 @@
             card.className = 'card item-photo';
             card.setAttribute('data-title', (titleText + " " + descText).toLowerCase());
 
+            // Added loading="lazy" for instant native image lazy-loading
             card.innerHTML = `
-                <img src="${filePath}" alt="Memory Photo" onclick="openLightbox('${filePath}')" onerror="this.src='https://picsum.photos/400/300?random=${i}'">
+                <img src="${filePath}" alt="Memory Photo" loading="lazy" onclick="openLightbox('${filePath}')" onerror="this.src='https://picsum.photos/400/300?random=${i}'">
                 <div class="card-content">
                     <div class="card-title">${titleText}</div>
                     <div class="card-desc">${descText}</div>
@@ -580,7 +583,7 @@
             allCardsArray.push(card);
         }
 
-        // 2. Generate 3 Videos Dynamically (videos/ folder)
+        // 2. Generate 3 Videos Dynamically with Lazy Element Attribute
         for (let j = 1; j <= 3; j++) {
             let vIndex = j - 1;
             let videoFileName = `video (${j}).mp4`;
@@ -590,13 +593,17 @@
             let vDesc = customVideoTitles[vIndex] ? customVideoTitles[vIndex].desc : getRandomQuote();
 
             let videoCard = document.createElement('div');
-            videoCard.className = 'card item-video';
+            videoCard.className = 'card item-video lazy-media';
             videoCard.setAttribute('data-title', (vTitle + " " + vDesc).toLowerCase());
+            videoCard.setAttribute('data-type', 'video');
+            videoCard.setAttribute('data-src', videoFilePath);
+            videoCard.setAttribute('data-filename', videoFileName);
+            videoCard.setAttribute('data-vtitle', vTitle);
+            videoCard.setAttribute('data-vdesc', vDesc);
+
+            // Placeholder until scrolled into view
             videoCard.innerHTML = `
-                <video controls onerror="this.parentElement.innerHTML='<div style=\'padding:20px;text-align:center;\'>ভিডিও লোড হয়নি (videos ফোল্ডার চেক করুন)</div>'">
-                    <source src="${videoFilePath}" type="video/mp4">
-                    Your browser does not support video.
-                </video>
+                <div style="height:200px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#888;">🎥 Loading Video...</div>
                 <div class="card-content">
                     <div class="card-title">${vTitle}</div>
                     <div class="card-desc">${vDesc}</div>
@@ -606,7 +613,7 @@
             allCardsArray.push(videoCard);
         }
 
-        // 3. Generate Audios Dynamically (audios/ folder)
+        // 3. Generate Audios Dynamically with Lazy Element Attribute
         let audioCount = 1; 
         for (let k = 1; k <= audioCount; k++) {
             let aIndex = k - 1;
@@ -617,15 +624,19 @@
             let aDesc = customAudioTitles[aIndex] ? customAudioTitles[aIndex].desc : getRandomQuote();
 
             let audioCard = document.createElement('div');
-            audioCard.className = 'card item-audio audio-card';
+            audioCard.className = 'card item-audio audio-card lazy-media';
             audioCard.setAttribute('data-title', (aTitle + " " + aDesc).toLowerCase());
+            audioCard.setAttribute('data-type', 'audio');
+            audioCard.setAttribute('data-src', audioFilePath);
+            audioCard.setAttribute('data-filename', audioFileName);
+            audioCard.setAttribute('data-atitle', aTitle);
+            audioCard.setAttribute('data-adesc', aDesc);
+
+            // Placeholder until scrolled into view
             audioCard.innerHTML = `
                 <div class="card-title">${aTitle}</div>
                 <div class="card-desc">${aDesc}</div>
-                <audio controls onerror="this.parentElement.innerHTML='<div style=\'padding:10px;text-align:center;\'>অডিও লোড হয়নি (audios ফোল্ডার চেক করুন)</div>'">
-                    <source src="${audioFilePath}" type="audio/mpeg">
-                    Your browser does not support audio.
-                </audio>
+                <div style="padding:15px; text-align:center; color:#888;">🎙️ Loading Audio...</div>
                 <button onclick="downloadFile('${audioFilePath}', '${audioFileName}')" class="download-btn" style="margin-top:10px;">⬇️ Download Audio</button>
             `;
             allCardsArray.push(audioCard);
@@ -640,10 +651,57 @@
             return array;
         }
 
-        // Append shuffled cards into mediaGrid on page load
+        // Append shuffled cards into mediaGrid
         const mediaGrid = document.getElementById('mediaGrid');
         let shuffledCards = shuffleArray(allCardsArray);
         shuffledCards.forEach(card => mediaGrid.appendChild(card));
+
+        // Intersection Observer for Video & Audio Smart Lazy Loading (Only load when in screen)
+        const lazyMediaObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    let card = entry.target;
+                    let type = card.getAttribute('data-type');
+                    let src = card.getAttribute('data-src');
+                    let filename = card.getAttribute('data-filename');
+
+                    if (type === 'video') {
+                        let vTitle = card.getAttribute('data-vtitle');
+                        let vDesc = card.getAttribute('data-vdesc');
+                        card.innerHTML = `
+                            <video controls onerror="this.parentElement.innerHTML='<div style=\'padding:20px;text-align:center;\'>ভিডিও লোড হয়নি (videos ফোল্ডার চেক করুন)</div>'">
+                                <source src="${src}" type="video/mp4">
+                                Your browser does not support video.
+                            </video>
+                            <div class="card-content">
+                                <div class="card-title">${vTitle}</div>
+                                <div class="card-desc">${vDesc}</div>
+                                <button onclick="downloadFile('${src}', '${filename}')" class="download-btn">⬇️ Download Video</button>
+                            </div>
+                        `;
+                    } else if (type === 'audio') {
+                        let aTitle = card.getAttribute('data-atitle');
+                        let aDesc = card.getAttribute('data-adesc');
+                        card.innerHTML = `
+                            <div class="card-title">${aTitle}</div>
+                            <div class="card-desc">${aDesc}</div>
+                            <audio controls onerror="this.parentElement.innerHTML='<div style=\'padding:10px;text-align:center;\'>অডিও লোড হয়নি (audios ফোল্ডার চেক করুন)</div>'">
+                                <source src="${src}" type="audio/mpeg">
+                                Your browser does not support audio.
+                            </audio>
+                            <button onclick="downloadFile('${src}', '${filename}')" class="download-btn" style="margin-top:10px;">⬇️ Download Audio</button>
+                        `;
+                    }
+
+                    observer.unobserve(card); // Unobserve once loaded
+                }
+            });
+        }, { rootMargin: "200px" });
+
+        // Attach observer to video & audio cards
+        document.querySelectorAll('.lazy-media').forEach(card => {
+            lazyMediaObserver.observe(card);
+        });
 
         // Download Function
         function downloadFile(fileUrl, fileName) {
