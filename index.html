@@ -461,7 +461,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>Made by JUBAYER TALUKDAR - version 1.0 - relased 11/102026</p>
+        <p>Made by JUBAYER TALUKDAR - version 1.0 - relased 11/10/2026 - last updated 22/10/2026</p>
     </footer>
 
     <!-- JavaScript Code -->
@@ -545,22 +545,29 @@
         const customPhotoTitles = {
             0: { title: "visiting somewhere 🌸", desc: "sample photo" },
             1: { title: "good moment ☕", desc: "adorable pose!" },
-            198: { title: "last exam HSC", desc: "amadr practical xm er last day chilo. The end of HSC"}
+            198: { title: "last exam HSC", desc: "amadr practical xm er last day chilo. The end of HSC"},
+            201: {title: "hostel friend.", desc: "photo was clicked on dated 22/10/2026 before somedays of medical exam. the moment was memorable. hostel photo" },
+            202: {title: "cute pose", desc: "photo was clicked on dated 22/10/2026 before somedays of medical exam. the moment was memorable. hostel photo" },
+            203: {title: "great pose", desc: "In hostel. hostel photo" },
+            204: {title: "nice bangles", desc: "brought yesterday (21/10/2026), hostel photo" },
+            205: {title: "nice bangles", desc: "brought yesterday (21/10/2026), hostel photo" },
+            206: {title: "with hostel friend", desc: "hostel photo" },
+
         };
 
         const customVideoTitles = {
-            0: { title: "মজার ভিডিও ক্লিপ 🎥", desc: "sample video!" }
+            0: { title: "মজার ভিডিও ক্লিপ 🎥", desc: "sample video!" },
         };
 
         const customAudioTitles = {
-            0: { title: "kara savda core music 🎙️", desc: "usable as ringtone" }
+            0: { title: "kara savda core music 🎙️", desc: "usable as ringtone" },
         };
 
         // Collect all cards into an array to randomize
         let allCardsArray = [];
 
         // 1. Generate 200 Photos (photos/ folder) with Lazy Loading
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 207; i++) {
             let fileName = i === 0 ? 'photo.jpg' : `photo (${i}).jpg`;
             let filePath = `photos/${fileName}`;
             
